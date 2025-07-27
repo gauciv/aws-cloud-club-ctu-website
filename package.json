@@ -3,6 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "echo 'no build script'"
+    "build": "mkdir -p dist && cp *.html *.css *.js dist/"
   }
 }
