@@ -1,0 +1,21 @@
+import type React from "react"
+import type { Metadata } from "next"
+import { ThemeProvider } from "@/components/theme-provider"
+import "./globals.css"
+
+export const metadata: Metadata = {
+  title: "AWSCC-CTU",
+  description: "AWS Cloud Club - Cebu Technological University",
+}
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" className="scroll-smooth">
+      <body className="min-h-screen bg-white font-sans antialiased dark:bg-slate-950">
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          {children}
+        </ThemeProvider>
+      </body>
+    </html>
+  )
+}
