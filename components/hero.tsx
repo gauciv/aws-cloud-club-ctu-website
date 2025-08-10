@@ -51,7 +51,7 @@ export default function Hero() {
           </div>
           <h1 className="text-balance text-4xl font-extrabold tracking-tight sm:text-5xl">
             <span className="bg-gradient-to-r from-cyan-700 via-sky-600 to-emerald-600 bg-clip-text text-transparent dark:from-cyan-300 dark:via-sky-300 dark:to-indigo-300">
-              AWSCC-CTU
+              AWS Cloud Club - Cebu Technological University
             </span>
           </h1>
           <p className="text-pretty text-base text-slate-700 dark:text-slate-300 sm:text-lg">

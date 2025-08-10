@@ -1,9 +1,8 @@
 "use client"
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { Badge } from "@/components/ui/badge"
-import { Menu, Cloud, Sparkles } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Menu } from "lucide-react"
 import ThemeToggle from "./theme-toggle"
 
 const links = [
@@ -33,8 +32,12 @@ export default function SiteHeader() {
           className="flex items-center gap-2"
           onClick={(e) => smoothScroll(e, '#hero')}
         >
-          <div className="flex size-9 items-center justify-center rounded-lg bg-cyan-100 text-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-300">
-            <Cloud className="h-5 w-5" />
+          <div className="flex size-9 items-center justify-center">
+            <img 
+              src="/awscc-ctu-logo.png" 
+              alt="AWSCC-CTU Logo" 
+              className="h-8 w-8 object-contain"
+            />
           </div>
           <div className="flex flex-col leading-tight">
             <span className="font-semibold text-foreground">AWS Cloud Club</span>
@@ -53,17 +56,6 @@ export default function SiteHeader() {
               {l.label}
             </a>
           ))}
-          <Badge variant="secondary" className="gap-1">
-            <Sparkles className="h-3.5 w-3.5" />
-            AWSCC-CTU
-          </Badge>
-          <a 
-            href="#subscribe" 
-            className="hidden sm:block"
-            onClick={(e) => smoothScroll(e, '#subscribe')}
-          >
-            <Button className="bg-cyan-600 hover:bg-cyan-700 text-white">Subscribe</Button>
-          </a>
           <ThemeToggle />
         </nav>
 
@@ -93,15 +85,6 @@ export default function SiteHeader() {
                     {l.label}
                   </a>
                 ))}
-                <a 
-                  href="#subscribe" 
-                  onClick={(e) => {
-                    smoothScroll(e, '#subscribe')
-                    setOpen(false)
-                  }}
-                >
-                  <Button className="mt-2 w-full bg-cyan-600 hover:bg-cyan-700 text-white">Subscribe</Button>
-                </a>
               </div>
             </SheetContent>
           </Sheet>
