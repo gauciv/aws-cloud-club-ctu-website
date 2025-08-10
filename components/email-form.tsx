@@ -1,20 +1,56 @@
 "use client"
 
-import { useActionState, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { CheckCircle2, Mail, ArrowRight, Sparkles, AlertTriangle, Shield } from "lucide-react"
-import { subscribe } from "@/app/actions/subscribe"
 import { triggerSuccessConfetti, isConfettiAvailable } from "@/lib/confetti"
 
+// Email validation regex
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+
+// Suspicious patterns to detect spam
+const SPAM_PATTERNS = [
+  /test@test\./i,
+  /example@example\./i,
+  /fake@fake\./i,
+  /spam@spam\./i,
+  /admin@admin\./i,
+  /noreply@/i,
+  /no-reply@/i,
+]
+
+function validateEmail(email: string): { valid: boolean; message?: string } {
+  if (!email || email.length === 0) {
+    return { valid: false, message: "Email address is required." }
+  }
+
+  if (email.length > 254) {
+    return { valid: false, message: "Email address is too long." }
+  }
+
+  if (!EMAIL_REGEX.test(email)) {
+    return { valid: false, message: "Please enter a valid email address." }
+  }
+
+  // Check for suspicious patterns
+  for (const pattern of SPAM_PATTERNS) {
+    if (pattern.test(email)) {
+      return { valid: false, message: "Please use a valid email address." }
+    }
+  }
+
+  return { valid: true }
+}
+
 export default function EmailForm() {
-  const [state, action, pending] = useActionState(subscribe, { 
+  const [state, setState] = useState({ 
     ok: false, 
     message: "", 
     rateLimited: false 
   })
-  
+  const [pending, setPending] = useState(false)
   const [hasTriggeredConfetti, setHasTriggeredConfetti] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
   const emailInputRef = useRef<HTMLInputElement>(null)
@@ -63,6 +99,40 @@ export default function EmailForm() {
     }
   }, [state.rateLimited])
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setPending(true)
+    setState({ ok: false, message: "", rateLimited: false })
+
+    const formData = new FormData(e.currentTarget)
+    const email = String(formData.get("email") || "").trim().toLowerCase()
+
+    // Email validation
+    const emailValidation = validateEmail(email)
+    if (!emailValidation.valid) {
+      setState({ 
+        ok: false, 
+        message: emailValidation.message || "Invalid email address.",
+        rateLimited: false
+      })
+      setPending(false)
+      return
+    }
+
+    // Simulate processing delay
+    await new Promise(resolve => setTimeout(resolve, 1000))
+
+    // For static site, we'll just show a success message
+    // In a real app, you'd send this to an API endpoint
+    const domain = email.includes('@ctu.edu') ? 'CTU' : 'our'
+    setState({ 
+      ok: true, 
+      message: `🎉 Welcome to ${domain} AWS Cloud Club! We'll be in touch soon.`,
+      rateLimited: false
+    })
+    setPending(false)
+  }
+
   const getMessageIcon = () => {
     if (state.ok) return <CheckCircle2 className="h-5 w-5 flex-shrink-0" />
     if (state.rateLimited) return <Shield className="h-5 w-5 flex-shrink-0" />
@@ -107,7 +177,7 @@ export default function EmailForm() {
 
         {/* Email Form */}
         <div className="max-w-md mx-auto">
-          <form ref={formRef} action={action} className="space-y-4">
+          <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email" className="text-sm font-medium text-slate-700 dark:text-slate-300">
                 Email Address
