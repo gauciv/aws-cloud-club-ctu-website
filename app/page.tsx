@@ -3,6 +3,7 @@ import Announcement from "@/components/announcement"
 import Hero from "@/components/hero"
 import EmailForm from "@/components/email-form"
 import SiteFooter from "@/components/footer"
+import DebugCursorTracker from "@/components/debug-cursor-tracker"
 
 export default function Page() {
   return (
@@ -12,6 +13,9 @@ export default function Page() {
       <Hero />
       <EmailForm />
       <SiteFooter />
+      
+      {/* Debug tracker - only in development */}
+      {process.env.NODE_ENV === 'development' && <DebugCursorTracker />}
     </main>
   )
 }
